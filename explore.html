@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore — Abdul Majeed</title>
+  <meta name="description" content="Visual media gallery — Abdul Majeed's collection of moments, projects, and memories." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="explore.css" />
+</head>
+<body>
+  <!-- Custom Cursor -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Abdul Majeed home">AM</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+        <li><a href="explore.html" class="nav-link nav-active-page">Explore</a></li>
+        <li><a href="index.html#contact" class="nav-link nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="explore-header" aria-label="Explore gallery header">
+    <canvas id="explore-canvas" aria-hidden="true"></canvas>
+    <div class="hero-grid-overlay" aria-hidden="true"></div>
+    <div class="explore-header-content">
+      <p class="section-label reveal-item" style="margin-bottom:12px;">[ explore/ ]</p>
+      <h1 class="explore-heading reveal-item">Explore</h1>
+      <p class="explore-subheading reveal-item">A visual journal of moments, projects, and memories.</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="explore-main" role="main">
+
+    <!-- ─── ALBUMS VIEW ─────────────────────────────── -->
+    <section id="albums-view" class="explore-section" aria-label="Photo albums">
+      <div class="container">
+        <div class="explore-toolbar">
+          <p class="explore-count" id="album-count" aria-live="polite">Loading albums…</p>
+        </div>
+        <div class="albums-grid" id="albums-grid" role="list" aria-label="Albums">
+          <!-- Skeleton loaders -->
+          <div class="album-skeleton" aria-hidden="true"></div>
+          <div class="album-skeleton" aria-hidden="true"></div>
+          <div class="album-skeleton" aria-hidden="true"></div>
+        </div>
+        <div class="empty-state" id="albums-empty" hidden>
+          <span class="empty-icon" aria-hidden="true">📁</span>
+          <p>No albums yet. <a href="upload.html">Upload some media →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ALBUM MEDIA VIEW ────────────────────────── -->
+    <section id="media-view" class="explore-section" hidden aria-label="Album media">
+      <div class="container">
+        <div class="media-toolbar">
+          <button class="back-btn" id="back-btn" aria-label="Back to all albums">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            Back to Albums
+          </button>
+          <div class="media-toolbar-right">
+            <h2 class="media-album-title" id="media-album-title"></h2>
+            <span class="media-count" id="media-count" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="masonry-grid" id="masonry-grid" role="list" aria-label="Album media items">
+          <!-- items injected by JS -->
+        </div>
+        <div class="empty-state" id="media-empty" hidden>
+          <span class="empty-icon" aria-hidden="true">🖼️</span>
+          <p>This album is empty. <a href="upload.html">Add media →</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── LIGHTBOX ────────────────────────────────── -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Media lightbox" hidden>
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <div class="lightbox-content" id="lightbox-content" aria-live="polite">
+      <!-- media injected by JS -->
+    </div>
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+    <p class="lightbox-caption" id="lightbox-caption"></p>
+    <p class="lightbox-counter" id="lightbox-counter" aria-live="polite"></p>
+  </div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p class="footer-text">Designed &amp; built by Abdul Majeed · Accra, Ghana · 2025</p>
+      <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="Abdul Majeed's GitHub">github.com/Abdulmajeed1344</a>
+    </div>
+  </footer>
+
+  <script type="module" src="explore.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload — Abdul Majeed</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="upload.css" />
+</head>
+<body>
+
+  <!-- ─── LOGIN SCREEN ─────────────────────────────────────────── -->
+  <div id="login-screen" class="login-screen" aria-label="Sign in required">
+    <div class="login-card">
+      <p class="section-label" style="margin-bottom:16px;">[ upload/ ]</p>
+      <h1 class="login-title">Admin Access</h1>
+      <p class="login-sub">Sign in to manage and upload media to the gallery.</p>
+      <button id="google-sign-in" class="btn-google" aria-label="Sign in with Google">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+      </button>
+      <a href="index.html" class="login-back">← Back to portfolio</a>
+    </div>
+  </div>
+
+  <!-- ─── ACCESS DENIED ─────────────────────────────────────────── -->
+  <div id="access-denied" class="login-screen" hidden aria-label="Access denied">
+    <div class="login-card login-card--denied">
+      <span class="denied-icon" aria-hidden="true">🔒</span>
+      <h1 class="login-title">Access Denied</h1>
+      <p class="login-sub">This dashboard is restricted to the site owner.<br />Your account does not have permission.</p>
+      <button id="sign-out-denied" class="btn-google btn-signout" aria-label="Sign out">Sign Out</button>
+      <a href="index.html" class="login-back">← Back to portfolio</a>
+    </div>
+  </div>
+
+  <!-- ─── UPLOAD DASHBOARD ──────────────────────────────────────── -->
+  <div id="dashboard" class="dashboard" hidden aria-label="Upload dashboard">
+
+    <!-- Top bar -->
+    <header class="dash-topbar" role="banner">
+      <a href="index.html" class="nav-logo" aria-label="Portfolio home">AM</a>
+      <span class="dash-title">Media Dashboard</span>
+      <div class="dash-topbar-right">
+        <span class="dash-user" id="dash-user-email" aria-live="polite"></span>
+        <button id="sign-out-btn" class="btn-signout-sm" aria-label="Sign out">Sign out</button>
+      </div>
+    </header>
+
+    <div class="dash-body">
+
+      <!-- LEFT PANEL: Albums -->
+      <aside class="dash-sidebar" role="complementary" aria-label="Album list">
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Albums</h2>
+          <button class="btn-new-album" id="new-album-btn" aria-label="Create new album">+ New</button>
+        </div>
+        <ul class="album-list" id="album-list" role="list" aria-label="Albums">
+          <li class="album-list-loading" aria-live="polite">Loading…</li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT PANEL: Media -->
+      <main class="dash-main" role="main" aria-label="Album contents">
+
+        <!-- Empty state: no album selected -->
+        <div class="dash-empty" id="dash-no-album">
+          <span class="dash-empty-icon" aria-hidden="true">←</span>
+          <p>Select an album from the left panel to view and manage its media.</p>
+        </div>
+
+        <!-- Active album panel -->
+        <div id="dash-album-panel" hidden>
+          <div class="album-panel-header">
+            <div>
+              <h2 class="album-panel-title" id="panel-album-name"></h2>
+              <p class="album-panel-meta" id="panel-album-meta"></p>
+            </div>
+            <div class="album-panel-actions">
+              <button class="btn-action btn-rename" id="rename-album-btn" aria-label="Rename album">Rename</button>
+              <button class="btn-action btn-delete-album" id="delete-album-btn" aria-label="Delete album">Delete Album</button>
+              <button class="btn-action btn-upload" id="open-upload-btn" aria-label="Upload media">+ Upload</button>
+            </div>
+          </div>
+
+          <!-- Media grid inside album -->
+          <div class="dash-media-grid" id="dash-media-grid" role="list" aria-label="Media items"></div>
+          <div class="dash-media-empty" id="dash-media-empty" hidden>
+            <p>No media in this album yet. Click <strong>+ Upload</strong> to add some.</p>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ─── UPLOAD MODAL ───────────────────────────────────────── -->
+    <div id="upload-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-label="Upload media">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">Upload Media</h3>
+          <button class="modal-close" id="modal-close" aria-label="Close upload modal">✕</button>
+        </div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Drag and drop files or click to browse">
+          <div class="drop-zone-inner">
+            <div class="drop-icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <p class="drop-label">Drag &amp; drop files here</p>
+            <p class="drop-sub">or <span class="drop-browse">browse files</span></p>
+            <p class="drop-types">JPG · PNG · GIF · MP4 · MOV · WEBM</p>
+          </div>
+          <input type="file" id="file-input" multiple accept="image/jpeg,image/png,image/gif,video/mp4,video/quicktime,video/webm" aria-label="File input" />
+        </div>
+
+        <!-- Caption -->
+        <div class="caption-field">
+          <label for="upload-caption" class="caption-label">Caption <span class="caption-optional">(optional, applies to all files)</span></label>
+          <input type="text" id="upload-caption" class="caption-input" placeholder="Describe these photos…" maxlength="200" />
+        </div>
+
+        <!-- Preview list -->
+        <div class="preview-list" id="preview-list" hidden aria-label="Files to upload"></div>
+
+        <!-- Upload button -->
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="cancel-upload" aria-label="Cancel upload">Cancel</button>
+          <button class="btn btn-primary" id="start-upload" disabled aria-label="Start upload">Upload Files</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── NEW ALBUM MODAL ────────────────────────────────────── -->
+    <div id="new-album-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-label="Create new album">
+      <div class="modal-card modal-card--sm">
+        <div class="modal-header">
+          <h3 class="modal-title">New Album</h3>
+          <button class="modal-close" id="new-album-close" aria-label="Close">✕</button>
+        </div>
+        <label for="new-album-name" class="caption-label">Album Name</label>
+        <input type="text" id="new-album-name" class="caption-input" placeholder="e.g. Ghana Trip 2025" maxlength="80" />
+        <div class="modal-footer" style="margin-top:20px;">
+          <button class="btn btn-outline" id="cancel-new-album">Cancel</button>
+          <button class="btn btn-primary" id="confirm-new-album">Create Album</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+
+  <script type="module" src="upload.js"></script>
+</body>
+</html>

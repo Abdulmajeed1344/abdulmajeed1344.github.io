@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abdul Majeed | IT Professional — Accra, Ghana</title>
+  <meta name="description" content="Portfolio of Abdul Majeed, IT Management graduate and product analyst at AT Ghana." />
+  <meta property="og:title" content="Abdul Majeed | IT Professional — Accra, Ghana" />
+  <meta property="og:description" content="Portfolio of Abdul Majeed, IT Management graduate and product analyst at AT Ghana." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://abdulmajeed1344.github.io" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Custom Cursor -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="Abdul Majeed home">AM</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="explore.html" class="nav-link">Explore</a></li>
+        <li><a href="#contact" class="nav-link nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section" aria-label="Hero">
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <div class="hero-grid-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-label reveal-hero" aria-label="Greeting">Hi, I'm</p>
+      <h1 class="hero-name reveal-hero">Abdul Majeed</h1>
+      <p class="hero-subtitle reveal-hero">
+        <span id="typed-text" aria-live="polite"></span><span class="typed-cursor" aria-hidden="true">|</span>
+      </p>
+      <p class="hero-bio reveal-hero">BSc IT Management · AT Ghana · Accra, Ghana<br />Building systems, analysing data, and driving results at the intersection of technology and mobile finance.</p>
+      <div class="hero-ctas reveal-hero">
+        <a href="#projects" class="btn btn-primary" id="view-work-btn">View My Work</a>
+        <a href="cv.pdf" class="btn btn-outline" id="download-cv-btn" download aria-label="Download CV PDF">Download CV</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span class="scroll-line"></span>
+      <span class="scroll-text">scroll</span>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section" aria-label="About">
+    <div class="container">
+      <p class="section-label reveal-section">[ about_me.txt ]</p>
+      <div class="about-grid">
+        <div class="about-left reveal-section">
+          <h2 class="section-heading">Who I Am</h2>
+          <p class="about-body">I am an IT Management professional with a Bachelor of Science (Second Class Upper) from the University of Professional Studies, Accra, and hands-on experience working at the intersection of technology, data, and mobile financial services.</p>
+          <p class="about-body">Currently at AT Ghana, I support the ATMoney product team by conducting market research, analysing customer behaviour data, developing KPIs, and coordinating cross-functional initiatives that drive user engagement and revenue. I have contributed to the launch of two successful promotional campaigns and represented my department in a company-wide AI innovation team — where I also built an AI-assisted Excel workflow tool that reduced manual effort across my unit.</p>
+          <p class="about-body">My technical background spans software development (PHP, SQL, Python), database management, hardware troubleshooting, and IT support — shaped through academic projects and a practical internship at Mamprobi Hospital.</p>
+          <p class="about-body">I enjoy building things that solve real problems, working with data to surface insights, and collaborating with teams to deliver results.</p>
+        </div>
+        <div class="about-right reveal-section">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-value">BSc IT Management</span>
+              <span class="stat-label">UPSA · 2024</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">Second Class Upper</span>
+              <span class="stat-label">Academic Grade</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">1+ Year</span>
+              <span class="stat-label">AT Ghana Experience</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">5+ Projects</span>
+              <span class="stat-label">Built &amp; Deployed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience" class="section section-dark" aria-label="Work Experience">
+    <div class="container">
+      <p class="section-label reveal-section">[ experience.log ]</p>
+      <h2 class="section-heading reveal-section">Work Experience</h2>
+      <div class="timeline">
+
+        <div class="timeline-entry reveal-section" data-side="left">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <span class="timeline-date">November 2025 – Present</span>
+              <span class="timeline-type">Full-Time Contract</span>
+            </div>
+            <h3 class="timeline-role">Product &amp; Data Analyst</h3>
+            <p class="timeline-company">AT Ghana</p>
+            <ul class="timeline-list">
+              <li>Conducted market research to identify user needs and pain points for mobile financial services in Ghana</li>
+              <li>Analysed customer behaviour data to inform product development and improve user experience</li>
+              <li>Collaborated with cross-functional teams to design and launch new products driving engagement and revenue</li>
+              <li>Developed KPIs to measure product success — including transaction volume, active users, and customer retention rates</li>
+              <li>Performed extensive User Acceptance Testing (UAT) before MFS product launches</li>
+            </ul>
+            <div class="timeline-achievements">
+              <p class="achievements-label">Key Achievements</p>
+              <ul class="achievements-list">
+                <li>Elected to represent the ATMoney department in a company-wide AI innovation team</li>
+                <li>Launched two successful campaigns: ATMoney Cashback Promo &amp; ATMoney Valentine's Day Use &amp; Get Promo</li>
+                <li>Built an AI-assisted Excel workflow tool that reduced manual effort and improved turnaround time</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-entry reveal-section" data-side="right">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <span class="timeline-date">November 2024 – November 2025</span>
+              <span class="timeline-type">National Service</span>
+            </div>
+            <h3 class="timeline-role">National Service Personnel</h3>
+            <p class="timeline-company">AT Ghana</p>
+            <ul class="timeline-list">
+              <li>Conducted market research to identify user needs and pain points for mobile financial services</li>
+              <li>Analysed customer behaviour data to inform product development and improve user experience</li>
+              <li>Collaborated with cross-functional teams on new product initiatives</li>
+              <li>Developed KPIs and contributed to product measurement frameworks</li>
+              <li>Supported UAT processes ahead of MFS product launches</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-entry reveal-section" data-side="left">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <span class="timeline-date">July 2023 – September 2023</span>
+              <span class="timeline-type">Internship</span>
+            </div>
+            <h3 class="timeline-role">IT Support Intern</h3>
+            <p class="timeline-company">Mamprobi Hospital</p>
+            <ul class="timeline-list">
+              <li>Provided technical support by troubleshooting hardware and software issues for hospital staff</li>
+              <li>Performed routine maintenance on the hospital computer system</li>
+              <li>Assisted with database maintenance — optimisation, backup, recovery, and data integrity</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section" aria-label="Projects">
+    <div class="container">
+      <p class="section-label reveal-section">[ projects/ ]</p>
+      <h2 class="section-heading reveal-section">What I've Built</h2>
+      <div class="projects-grid">
+
+        <article class="project-card reveal-section" aria-label="Tutorially project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">01</span>
+              <div class="project-tags">
+                <span class="tag">PHP</span><span class="tag">SQL</span><span class="tag">Python</span><span class="tag">XAMPP</span>
+              </div>
+            </div>
+            <h3 class="project-name">Tutorially</h3>
+            <p class="project-subtitle">Online Tutoring System</p>
+            <p class="project-desc">A web-based tutoring platform built for tertiary institutions to connect students and tutors online.</p>
+            <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View Tutorially on GitHub">View on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="project-card reveal-section" aria-label="Hospital Management System project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">02</span>
+              <div class="project-tags">
+                <span class="tag">PHP</span><span class="tag">SQL</span>
+              </div>
+            </div>
+            <h3 class="project-name">Hospital Management System</h3>
+            <p class="project-subtitle">Police Unit HMS</p>
+            <p class="project-desc">A management system built to streamline patient records and operations for a police unit hospital.</p>
+            <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View Hospital Management System on GitHub">View on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="project-card reveal-section" aria-label="NGO ERP System project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">03</span>
+              <div class="project-tags">
+                <span class="tag">PHP</span><span class="tag">SQL</span>
+              </div>
+            </div>
+            <h3 class="project-name">NGO ERP System</h3>
+            <p class="project-subtitle">Enterprise Resource Planning</p>
+            <p class="project-desc">A tailored ERP system for an NGO to manage operations, resources, and reporting.</p>
+            <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View NGO ERP System on GitHub">View on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="project-card reveal-section" aria-label="SUSU Savings System project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">04</span>
+              <div class="project-tags">
+                <span class="tag">PHP</span><span class="tag">SQL</span>
+              </div>
+            </div>
+            <h3 class="project-name">SUSU Savings System</h3>
+            <p class="project-subtitle">Community Savings Platform</p>
+            <p class="project-desc">A digital platform for managing communal savings (susu) contributions and payouts.</p>
+            <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View SUSU Savings System on GitHub">View on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="project-card reveal-section" aria-label="Internship Management System project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">05</span>
+              <div class="project-tags">
+                <span class="tag">PHP</span><span class="tag">SQL</span>
+              </div>
+            </div>
+            <h3 class="project-name">Internship Management System</h3>
+            <p class="project-subtitle">Portal for Placements &amp; Progress</p>
+            <p class="project-desc">A system to manage and track internship applications, placements, and progress.</p>
+            <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View Internship Management System on GitHub">View on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="project-card reveal-section project-internal" aria-label="AT SHS Initiative project">
+          <div class="project-card-inner">
+            <div class="project-header">
+              <span class="project-number">06</span>
+              <div class="project-tags">
+                <span class="tag">MS Excel</span><span class="tag">AI Tools</span>
+              </div>
+            </div>
+            <h3 class="project-name">AT SHS Initiative</h3>
+            <p class="project-subtitle">AI Workflow Automation</p>
+            <p class="project-desc">An AI-assisted Excel workflow tool built at AT Ghana to automate repetitive tasks and reduce manual processing time.</p>
+            <span class="project-link internal" aria-label="Internal project">Internal Project <span aria-hidden="true">🔒</span></span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="section section-dark" aria-label="Skills and Tools">
+    <div class="container">
+      <p class="section-label reveal-section">[ skills.json ]</p>
+      <h2 class="section-heading reveal-section">Skills &amp; Tools</h2>
+      <div class="skills-container">
+
+        <div class="skill-group reveal-section">
+          <h3 class="skill-group-label">Technical</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">PHP</span>
+            <span class="skill-tag">SQL</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">XAMPP</span>
+            <span class="skill-tag">HTML/CSS</span>
+            <span class="skill-tag">MS Office</span>
+            <span class="skill-tag">Excel</span>
+          </div>
+        </div>
+
+        <div class="skill-group reveal-section">
+          <h3 class="skill-group-label">Data &amp; Analytics</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Data Analysis</span>
+            <span class="skill-tag">KPI Development</span>
+            <span class="skill-tag">Market Research</span>
+            <span class="skill-tag">Customer Insights</span>
+            <span class="skill-tag">UAT Testing</span>
+            <span class="skill-tag">Campaign Measurement</span>
+          </div>
+        </div>
+
+        <div class="skill-group reveal-section">
+          <h3 class="skill-group-label">IT Support</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Hardware Troubleshooting</span>
+            <span class="skill-tag">Help Desk Support</span>
+            <span class="skill-tag">Database Maintenance</span>
+            <span class="skill-tag">System Administration</span>
+          </div>
+        </div>
+
+        <div class="skill-group reveal-section">
+          <h3 class="skill-group-label">Soft Skills</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Cross-functional Collaboration</span>
+            <span class="skill-tag">Process Documentation</span>
+            <span class="skill-tag">Attention to Detail</span>
+            <span class="skill-tag">Business Process Analysis</span>
+            <span class="skill-tag">Fraud Detection &amp; Control Testing</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section" aria-label="Contact">
+    <div class="container">
+      <p class="section-label reveal-section">[ contact.sh ]</p>
+      <h2 class="section-heading reveal-section">Let's Connect</h2>
+      <p class="contact-intro reveal-section">Open to new opportunities, collaborations, and conversations.</p>
+      <div class="contact-links reveal-section">
+
+        <a href="mailto:tachiemensonabdulmajeed@gmail.com" class="contact-row" id="contact-email" aria-label="Send email to Abdul Majeed">
+          <div class="contact-row-left">
+            <span class="contact-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <span class="contact-label">Email Me</span>
+          </div>
+          <div class="contact-row-right">
+            <span class="contact-value">tachiemensonabdulmajeed@gmail.com</span>
+            <span class="contact-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="contact-row" id="contact-github" aria-label="View Abdul Majeed's GitHub profile">
+          <div class="contact-row-left">
+            <span class="contact-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            </span>
+            <span class="contact-label">GitHub</span>
+          </div>
+          <div class="contact-row-right">
+            <span class="contact-value">github.com/Abdulmajeed1344</span>
+            <span class="contact-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a href="https://linkedin.com/in/" target="_blank" rel="noopener noreferrer" class="contact-row" id="contact-linkedin" aria-label="View Abdul Majeed's LinkedIn profile">
+          <div class="contact-row-left">
+            <span class="contact-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </span>
+            <span class="contact-label">LinkedIn</span>
+          </div>
+          <div class="contact-row-right">
+            <span class="contact-value">linkedin.com/in/ (coming soon)</span>
+            <span class="contact-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a href="tel:+233267317752" class="contact-row" id="contact-phone" aria-label="Call Abdul Majeed">
+          <div class="contact-row-left">
+            <span class="contact-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.97a16 16 0 0 0 5.88 5.88l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
+            </span>
+            <span class="contact-label">Phone</span>
+          </div>
+          <div class="contact-row-right">
+            <span class="contact-value">+233 267 317 752</span>
+            <span class="contact-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p class="footer-text">Designed &amp; built by Abdul Majeed · Accra, Ghana · 2025</p>
+      <a href="https://github.com/Abdulmajeed1344" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="Abdul Majeed's GitHub">github.com/Abdulmajeed1344</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
