@@ -49,6 +49,9 @@
     <div class="dash-topbar">
       <span class="dash-title">📁 Upload Dashboard</span>
       <div class="dash-topbar-right">
+        <a href="explore.html" target="_blank" class="btn-action" style="color:var(--gold);border-color:rgba(201,168,76,0.4);display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+          👁️ View Live Gallery
+        </a>
         <span class="dash-user" id="dash-user-email">Abdul Majeed</span>
         <button class="btn-signout-sm" id="sign-out-btn">Lock</button>
       </div>
@@ -108,7 +111,11 @@
       </div>
       <div class="caption-field">
         <label class="caption-label" for="new-album-name">Album Name</label>
-        <input class="caption-input" id="new-album-name" type="text" maxlength="80" placeholder="e.g. Trip to Accra" />
+        <input class="caption-input" id="new-album-name" type="text" maxlength="80" placeholder="e.g. Project Photos & Notes" />
+      </div>
+      <div class="caption-field">
+        <label class="caption-label" for="new-album-desc">Album Notes / Description <span class="caption-optional">(optional)</span></label>
+        <textarea class="caption-input" id="new-album-desc" rows="3" placeholder="Add notes or background context about this album…"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn-action" id="cancel-new-album">Cancel</button>

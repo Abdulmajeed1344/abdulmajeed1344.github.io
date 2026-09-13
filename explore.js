@@ -148,7 +148,7 @@ async function loadAlbums() {
           <p class="album-meta">${count} item${count !== 1 ? 's' : ''}</p>
         </div>`;
 
-      const open = () => openAlbum(album.id, album.name, album.media || []);
+      const open = () => openAlbum(album.id, album.name, album.media || [], album.description || '');
       card.addEventListener('click', open);
       card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       albumsGrid.appendChild(card);
@@ -162,9 +162,14 @@ async function loadAlbums() {
 }
 
 // ─── OPEN ALBUM ────────────────────────────────────────────────────────────────
-function openAlbum(albumId, albumName, media) {
+function openAlbum(albumId, albumName, media, albumDesc = '') {
   currentAlbum = { id: albumId, name: albumName };
   mediaTitle.textContent = albumName;
+  const descEl = document.getElementById('media-album-desc');
+  if (descEl) {
+    descEl.textContent = albumDesc;
+    descEl.style.display = albumDesc ? 'block' : 'none';
+  }
   masonryGrid.innerHTML = '';
   mediaEmpty.hidden = true;
 

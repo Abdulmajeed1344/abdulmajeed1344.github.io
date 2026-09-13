@@ -313,14 +313,15 @@ function buildDashMediaItem(m) {
       ? `<video class="dash-media-thumb-video" src="${m.url}" preload="metadata" muted></video>`
       : `<img class="dash-media-thumb" src="${m.url}" alt="${escHtml(m.caption || 'Media')}" loading="lazy" />`}
     <div class="dash-media-info">
-      <input class="dash-media-caption-input" type="text" value="${escHtml(m.caption || '')}" placeholder="Add caption…" maxlength="200" aria-label="Caption for this item" />
+      <label class="caption-label" style="font-size:0.7rem;margin:0;color:var(--muted);">📝 Notes / Caption</label>
+      <textarea class="dash-media-caption-input" rows="2" placeholder="Add notes or caption…" maxlength="300" aria-label="Notes for this item">${escHtml(m.caption || '')}</textarea>
       <div class="dash-media-actions">
-        <button class="btn-caption-save" aria-label="Save caption">Save</button>
+        <button class="btn-caption-save" aria-label="Save notes">Save Note</button>
         <button class="btn-media-delete" aria-label="Delete this item">Delete</button>
       </div>
     </div>`;
 
-  // Save caption
+  // Save caption / notes
   li.querySelector('.btn-caption-save').addEventListener('click', async () => {
     const cap = li.querySelector('.dash-media-caption-input').value.trim();
     try {
@@ -410,12 +411,15 @@ cancelNewAlbum.addEventListener('click', () => { newAlbumModal.hidden = true; })
 
 confirmNewAlbum.addEventListener('click', async () => {
   const name = newAlbumName.value.trim();
+  const descEl = document.getElementById('new-album-desc');
+  const description = descEl ? descEl.value.trim() : '';
   if (!name) { toast('Please enter an album name', 'error'); return; }
   try {
     const { data, sha } = await ghGetData();
     const newAlbum = {
       id: uid(),
       name,
+      description,
       createdAt: Date.now(),
       coverImage: '',
       itemCount: 0,
@@ -424,6 +428,7 @@ confirmNewAlbum.addEventListener('click', async () => {
     data.albums.unshift(newAlbum);
     await ghPutData(data, sha);
     newAlbumModal.hidden = true;
+    if (descEl) descEl.value = '';
     toast(`Album "${name}" created`);
     loadAlbums();
   } catch (err) { toast(err.message, 'error'); }
