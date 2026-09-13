@@ -39,9 +39,15 @@ async function ghFetch(url, options = {}) {
   return res;
 }
 
-/** Fetch data.json from GitHub, return { data, sha } */
+/** Fetch data.json from GitHub (unauthenticated read for public repo to eliminate 401 errors) */
 async function ghGetData() {
-  const res = await ghFetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`);
+  let res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}&cb=${Date.now()}`);
+  
+  // Fallback to authenticated fetch only if public read fails
+  if (!res.ok && (res.status === 401 || res.status === 403)) {
+    res = await ghFetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`);
+  }
+
   if (!res.ok) {
     if (res.status === 404) return { data: { albums: [] }, sha: null };
     throw new Error(`GitHub API error: ${res.status}`);
