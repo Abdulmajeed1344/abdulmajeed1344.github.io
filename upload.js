@@ -13,32 +13,37 @@ try { localStorage.removeItem('gh_token'); } catch (e) {}
 // ─── GITHUB API HELPERS ───────────────────────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
-function getGhHeaders() {
-  const customToken = localStorage.getItem('gh_token');
-  const token = (customToken && customToken.trim()) ? customToken.trim() : GITHUB_TOKEN;
-  return {
-    'Authorization': `token ${token}`,
+function getToken() {
+  const custom = localStorage.getItem('gh_token');
+  return (custom && custom.trim().length > 10) ? custom.trim() : GITHUB_TOKEN;
+}
+
+/** Unified Fetch with automatic Bearer / token auth retry & clean CORS headers */
+async function ghFetch(url, options = {}) {
+  const token = getToken();
+  const headers = {
     'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json'
+    ...(options.headers || {})
   };
+
+  // Try Bearer auth header first
+  headers['Authorization'] = `Bearer ${token}`;
+  let res = await fetch(url, { ...options, headers });
+
+  // If 401, retry with legacy token auth header
+  if (res.status === 401) {
+    headers['Authorization'] = `token ${token}`;
+    res = await fetch(url, { ...options, headers });
+  }
+
+  return res;
 }
 
 /** Fetch data.json from GitHub, return { data, sha } */
 async function ghGetData() {
-  let res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
-  
-  // If local token returned 401, clear local token and retry with default GITHUB_TOKEN
-  if (res.status === 401 && localStorage.getItem('gh_token')) {
-    localStorage.removeItem('gh_token');
-    res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
-  }
-
+  const res = await ghFetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`);
   if (!res.ok) {
     if (res.status === 404) return { data: { albums: [] }, sha: null };
-    if (res.status === 401) {
-      localStorage.removeItem('gh_token');
-      throw new Error('401 Unauthorized — Unable to authenticate with GitHub API.');
-    }
     throw new Error(`GitHub API error: ${res.status}`);
   }
   const json = await res.json();
@@ -56,21 +61,13 @@ async function ghPutData(data, sha) {
     branch: GITHUB_BRANCH
   };
   if (sha) body.sha = sha;
-  let res = await fetch(`${GH_API}/${DATA_PATH}`, {
-    method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
+  const res = await ghFetch(`${GH_API}/${DATA_PATH}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
   });
-  if (res.status === 401 && localStorage.getItem('gh_token')) {
-    localStorage.removeItem('gh_token');
-    res = await fetch(`${GH_API}/${DATA_PATH}`, {
-      method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
-    });
-  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    if (res.status === 401) {
-      localStorage.removeItem('gh_token');
-      throw new Error('401 Unauthorized — GitHub token invalid/expired.');
-    }
     throw new Error(err.message || `GitHub write error: ${res.status}`);
   }
   return res.json();
@@ -84,31 +81,28 @@ async function ghUploadFile(albumId, fileName, base64Content) {
     content: base64Content,
     branch: GITHUB_BRANCH
   };
-  const res = await fetch(`${GH_API}/${filePath}`, {
-    method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
+  const res = await ghFetch(`${GH_API}/${filePath}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    if (res.status === 401) {
-      throw new Error('401 Unauthorized — GitHub token invalid/expired.');
-    }
     throw new Error(err.message || `Upload failed: ${res.status}`);
   }
   const json = await res.json();
-  // Return the raw GitHub URL
   return `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${filePath}`;
 }
 
 /** Delete a file from GitHub */
 async function ghDeleteFile(albumId, fileName) {
   const filePath = `media/${albumId}/${fileName}`;
-  // First get the current SHA of the file
-  const res = await fetch(`${GH_API}/${filePath}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
-  if (!res.ok) return; // file might already be gone
+  const res = await ghFetch(`${GH_API}/${filePath}?ref=${GITHUB_BRANCH}`);
+  if (!res.ok) return;
   const json = await res.json();
-  await fetch(`${GH_API}/${filePath}`, {
+  await ghFetch(`${GH_API}/${filePath}`, {
     method: 'DELETE',
-    headers: getGhHeaders(),
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: `delete: ${fileName}`,
       sha: json.sha,
