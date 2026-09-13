@@ -1,7 +1,7 @@
 // upload.js — GitHub API + Password Auth upload dashboard
 // ─── CONFIGURATION ──────────────────────────────────────────────────────────
 const DASHBOARD_PASSWORD = 'Abdulmajeed02.';
-const GITHUB_TOKEN       = atob('Z2hwX0Fwc01IaWwwaURlTkNSd3hwZ0E1d01BOTNydUdzVjExbERTUg==');
+const GITHUB_TOKEN       = atob('Z2hwX0UzZG9JZksxOXZtbVQ1TnZmaFo2RHpRM3NScmZFSjBYSzVpZw==');
 const GITHUB_OWNER       = 'Abdulmajeed1344';
 const GITHUB_REPO        = 'abdulmajeed1344.github.io';
 const GITHUB_BRANCH      = 'main';
