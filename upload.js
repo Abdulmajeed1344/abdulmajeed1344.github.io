@@ -9,18 +9,25 @@ const DATA_PATH          = 'data.json'; // path within the repo
 
 // ─── GITHUB API HELPERS ───────────────────────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
-const GH_HEADERS = {
-  'Authorization': `token ${GITHUB_TOKEN}`,
-  'Accept': 'application/vnd.github.v3+json',
-  'Content-Type': 'application/json'
-};
+
+function getGhHeaders() {
+  const customToken = localStorage.getItem('gh_token');
+  const token = customToken || GITHUB_TOKEN;
+  return {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+}
 
 /** Fetch data.json from GitHub, return { data, sha } */
 async function ghGetData() {
-  const res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: GH_HEADERS });
+  const res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
   if (!res.ok) {
-    // If file doesn't exist yet, return empty structure
     if (res.status === 404) return { data: { albums: [] }, sha: null };
+    if (res.status === 401) {
+      throw new Error('401 Unauthorized — GitHub token invalid/expired. Please enter a valid Personal Access Token on the login screen.');
+    }
     throw new Error(`GitHub API error: ${res.status}`);
   }
   const json = await res.json();
@@ -39,10 +46,13 @@ async function ghPutData(data, sha) {
   };
   if (sha) body.sha = sha;
   const res = await fetch(`${GH_API}/${DATA_PATH}`, {
-    method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(body)
+    method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      throw new Error('401 Unauthorized — GitHub token invalid/expired. Please update your token on the login screen.');
+    }
     throw new Error(err.message || `GitHub write error: ${res.status}`);
   }
   return res.json();
@@ -57,10 +67,13 @@ async function ghUploadFile(albumId, fileName, base64Content) {
     branch: GITHUB_BRANCH
   };
   const res = await fetch(`${GH_API}/${filePath}`, {
-    method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(body)
+    method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      throw new Error('401 Unauthorized — GitHub token invalid/expired.');
+    }
     throw new Error(err.message || `Upload failed: ${res.status}`);
   }
   const json = await res.json();
@@ -72,12 +85,12 @@ async function ghUploadFile(albumId, fileName, base64Content) {
 async function ghDeleteFile(albumId, fileName) {
   const filePath = `media/${albumId}/${fileName}`;
   // First get the current SHA of the file
-  const res = await fetch(`${GH_API}/${filePath}?ref=${GITHUB_BRANCH}`, { headers: GH_HEADERS });
+  const res = await fetch(`${GH_API}/${filePath}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
   if (!res.ok) return; // file might already be gone
   const json = await res.json();
   await fetch(`${GH_API}/${filePath}`, {
     method: 'DELETE',
-    headers: GH_HEADERS,
+    headers: getGhHeaders(),
     body: JSON.stringify({
       message: `delete: ${fileName}`,
       sha: json.sha,
@@ -105,9 +118,14 @@ function uid() {
 const loginScreen      = document.getElementById('login-screen');
 const dashboard        = document.getElementById('dashboard');
 const passwordInput    = document.getElementById('password-input');
+const tokenInput       = document.getElementById('token-input');
 const pwSubmit         = document.getElementById('pw-submit');
 const pwError          = document.getElementById('pw-error');
 const signOutBtn       = document.getElementById('sign-out-btn');
+
+if (tokenInput && localStorage.getItem('gh_token')) {
+  tokenInput.value = localStorage.getItem('gh_token');
+}
 
 const albumList        = document.getElementById('album-list');
 const newAlbumBtn      = document.getElementById('new-album-btn');
@@ -197,6 +215,9 @@ function doLogin() {
   const validPasswords = ['abdulmajeed02.', 'abdulmajeed02', 'abdulmajeed', 'abdulmajeed02!'];
   if (validPasswords.includes(lower)) {
     sessionStorage.setItem('dash_auth', '1');
+    if (tokenInput && tokenInput.value.trim()) {
+      localStorage.setItem('gh_token', tokenInput.value.trim());
+    }
     if (pwError) pwError.style.display = 'none';
     showDashboard();
   } else {
