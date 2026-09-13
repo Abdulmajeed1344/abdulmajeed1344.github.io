@@ -2,7 +2,20 @@
    UPLOAD DASHBOARD STYLES
 ============================================ */
 
-[hidden] { display: none !important; }
+/* Restore normal mouse cursor for upload dashboard */
+html, body {
+  cursor: auto !important;
+}
+button, a, input, select, textarea, [role="button"], .btn-google, .btn-action, .drop-zone {
+  cursor: pointer !important;
+}
+input[type="text"], input[type="password"] {
+  cursor: text !important;
+}
+
+[hidden], #login-screen[hidden], #dashboard[hidden] {
+  display: none !important;
+}
 
 /* ─── LOGIN SCREEN ───────────────────────── */
 .login-screen {

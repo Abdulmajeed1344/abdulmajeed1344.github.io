@@ -24,7 +24,9 @@ async function ghGetData() {
     throw new Error(`GitHub API error: ${res.status}`);
   }
   const json = await res.json();
-  const data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+  const rawStr = atob(json.content.replace(/\n/g, ''));
+  const decodedStr = decodeURIComponent(escape(rawStr));
+  const data = JSON.parse(decodedStr);
   return { data, sha: json.sha };
 }
 
