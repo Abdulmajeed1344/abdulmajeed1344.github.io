@@ -12,7 +12,7 @@ const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/cont
 
 function getGhHeaders() {
   const customToken = localStorage.getItem('gh_token');
-  const token = customToken || GITHUB_TOKEN;
+  const token = (customToken && customToken.trim()) ? customToken.trim() : GITHUB_TOKEN;
   return {
     'Authorization': `token ${token}`,
     'Accept': 'application/vnd.github.v3+json',
@@ -22,11 +22,19 @@ function getGhHeaders() {
 
 /** Fetch data.json from GitHub, return { data, sha } */
 async function ghGetData() {
-  const res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
+  let res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
+  
+  // If local token returned 401, clear local token and retry with default GITHUB_TOKEN
+  if (res.status === 401 && localStorage.getItem('gh_token')) {
+    localStorage.removeItem('gh_token');
+    res = await fetch(`${GH_API}/${DATA_PATH}?ref=${GITHUB_BRANCH}`, { headers: getGhHeaders() });
+  }
+
   if (!res.ok) {
     if (res.status === 404) return { data: { albums: [] }, sha: null };
     if (res.status === 401) {
-      throw new Error('401 Unauthorized — GitHub token invalid/expired. Please enter a valid Personal Access Token on the login screen.');
+      localStorage.removeItem('gh_token');
+      throw new Error('401 Unauthorized — Unable to authenticate with GitHub API.');
     }
     throw new Error(`GitHub API error: ${res.status}`);
   }
@@ -45,13 +53,20 @@ async function ghPutData(data, sha) {
     branch: GITHUB_BRANCH
   };
   if (sha) body.sha = sha;
-  const res = await fetch(`${GH_API}/${DATA_PATH}`, {
+  let res = await fetch(`${GH_API}/${DATA_PATH}`, {
     method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
   });
+  if (res.status === 401 && localStorage.getItem('gh_token')) {
+    localStorage.removeItem('gh_token');
+    res = await fetch(`${GH_API}/${DATA_PATH}`, {
+      method: 'PUT', headers: getGhHeaders(), body: JSON.stringify(body)
+    });
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     if (res.status === 401) {
-      throw new Error('401 Unauthorized — GitHub token invalid/expired. Please update your token on the login screen.');
+      localStorage.removeItem('gh_token');
+      throw new Error('401 Unauthorized — GitHub token invalid/expired.');
     }
     throw new Error(err.message || `GitHub write error: ${res.status}`);
   }
