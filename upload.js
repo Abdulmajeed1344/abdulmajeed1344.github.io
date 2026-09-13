@@ -14,8 +14,7 @@ try { localStorage.removeItem('gh_token'); } catch (e) {}
 const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
 function getToken() {
-  const custom = localStorage.getItem('gh_token');
-  return (custom && custom.trim().length > 10) ? custom.trim() : GITHUB_TOKEN;
+  return GITHUB_TOKEN;
 }
 
 /** Unified Fetch with automatic Bearer / token auth retry & clean CORS headers */
