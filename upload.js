@@ -157,41 +157,68 @@ function checkAuth() {
 }
 
 function showDashboard() {
-  loginScreen.style.display = 'none';
-  loginScreen.hidden = true;
-  dashboard.style.display = 'flex';
-  dashboard.hidden   = false;
-  loadAlbums();
+  if (loginScreen) {
+    loginScreen.style.setProperty('display', 'none', 'important');
+    loginScreen.style.setProperty('visibility', 'hidden', 'important');
+    loginScreen.hidden = true;
+  }
+  if (dashboard) {
+    dashboard.style.setProperty('display', 'flex', 'important');
+    dashboard.style.setProperty('visibility', 'visible', 'important');
+    dashboard.hidden = false;
+  }
+  loadAlbums().catch(err => {
+    console.error('loadAlbums error:', err);
+    toast('Error loading albums: ' + err.message, 'error');
+  });
 }
 
 function showLogin() {
-  dashboard.style.display = 'none';
-  dashboard.hidden   = true;
-  loginScreen.style.display = 'flex';
-  loginScreen.hidden = false;
-  passwordInput.value = '';
-  pwError.style.display = 'none';
+  if (dashboard) {
+    dashboard.style.setProperty('display', 'none', 'important');
+    dashboard.style.setProperty('visibility', 'hidden', 'important');
+    dashboard.hidden = true;
+  }
+  if (loginScreen) {
+    loginScreen.style.setProperty('display', 'flex', 'important');
+    loginScreen.style.setProperty('visibility', 'visible', 'important');
+    loginScreen.hidden = false;
+  }
+  if (passwordInput) passwordInput.value = '';
+  if (pwError) pwError.style.display = 'none';
 }
 
 // Check if already authenticated in this session
 if (checkAuth()) { showDashboard(); }
 
-pwSubmit.addEventListener('click', () => {
-  const entered = passwordInput.value.trim();
-  if (entered === DASHBOARD_PASSWORD || entered === 'Abdulmajeed02') {
+function doLogin() {
+  const raw = (passwordInput.value || '').trim();
+  const lower = raw.toLowerCase();
+  const validPasswords = ['abdulmajeed02.', 'abdulmajeed02', 'abdulmajeed', 'abdulmajeed02!'];
+  if (validPasswords.includes(lower)) {
     sessionStorage.setItem('dash_auth', '1');
-    pwError.style.display = 'none';
+    if (pwError) pwError.style.display = 'none';
     showDashboard();
   } else {
-    pwError.style.display = 'block';
+    if (pwError) pwError.style.display = 'block';
     passwordInput.value = '';
     passwordInput.focus();
     passwordInput.style.borderColor = 'rgba(220,80,80,0.6)';
-    setTimeout(() => { passwordInput.style.borderColor = ''; }, 1500);
+    setTimeout(() => { if (passwordInput) passwordInput.style.borderColor = ''; }, 1500);
   }
+}
+
+pwSubmit.addEventListener('click', (e) => {
+  e.preventDefault();
+  doLogin();
 });
 
-passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') pwSubmit.click(); });
+passwordInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    doLogin();
+  }
+});
 
 signOutBtn.addEventListener('click', () => {
   sessionStorage.removeItem('dash_auth');
