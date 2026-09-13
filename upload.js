@@ -7,6 +7,9 @@ const GITHUB_REPO        = 'abdulmajeed1344.github.io';
 const GITHUB_BRANCH      = 'main';
 const DATA_PATH          = 'data.json'; // path within the repo
 
+// Clear any legacy stored token on load to enforce the new active token
+try { localStorage.removeItem('gh_token'); } catch (e) {}
+
 // ─── GITHUB API HELPERS ───────────────────────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
