@@ -2,6 +2,8 @@
    UPLOAD DASHBOARD STYLES
 ============================================ */
 
+[hidden] { display: none !important; }
+
 /* ─── LOGIN SCREEN ───────────────────────── */
 .login-screen {
   position: fixed;

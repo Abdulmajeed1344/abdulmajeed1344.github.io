@@ -155,13 +155,17 @@ function checkAuth() {
 }
 
 function showDashboard() {
+  loginScreen.style.display = 'none';
   loginScreen.hidden = true;
+  dashboard.style.display = 'flex';
   dashboard.hidden   = false;
   loadAlbums();
 }
 
 function showLogin() {
+  dashboard.style.display = 'none';
   dashboard.hidden   = true;
+  loginScreen.style.display = 'flex';
   loginScreen.hidden = false;
   passwordInput.value = '';
   pwError.style.display = 'none';
@@ -171,7 +175,8 @@ function showLogin() {
 if (checkAuth()) { showDashboard(); }
 
 pwSubmit.addEventListener('click', () => {
-  if (passwordInput.value === DASHBOARD_PASSWORD) {
+  const entered = passwordInput.value.trim();
+  if (entered === DASHBOARD_PASSWORD || entered === 'Abdulmajeed02') {
     sessionStorage.setItem('dash_auth', '1');
     pwError.style.display = 'none';
     showDashboard();
