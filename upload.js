@@ -10,6 +10,22 @@ const DATA_PATH          = 'data.json'; // path within the repo
 // Clear any legacy stored token on load to enforce the new active token
 try { localStorage.removeItem('gh_token'); } catch (e) {}
 
+// ─── DEBUG LOGGER ─────────────────────────────────────────────────────────────
+function logDebug(msg, type = 'info') {
+  console.log(`[DEBUG] ${msg}`);
+  const logEl = document.getElementById('debug-log');
+  const panel = document.getElementById('debug-panel');
+  if (panel) panel.style.display = 'block';
+  if (logEl) {
+    const item = document.createElement('div');
+    item.style.color = type === 'error' ? '#f07070' : type === 'success' ? '#70f090' : '#cccccc';
+    item.style.wordBreak = 'break-all';
+    item.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    logEl.appendChild(item);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+}
+
 // ─── GITHUB API HELPERS ───────────────────────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
@@ -20,19 +36,32 @@ function getToken() {
 /** Unified Fetch with automatic Bearer / token auth retry & clean CORS headers */
 async function ghFetch(url, options = {}) {
   const token = getToken();
+  const relUrl = url.replace(GH_API, '');
+  const method = options.method || 'GET';
+  logDebug(`API ${method} -> ${relUrl}`);
+  logDebug(`Using token: ${token.substring(0, 7)}... (length ${token.length})`);
+
   const headers = {
     'Accept': 'application/vnd.github.v3+json',
     ...(options.headers || {})
   };
 
-  // Try Bearer auth header first
   headers['Authorization'] = `Bearer ${token}`;
   let res = await fetch(url, { ...options, headers });
+  logDebug(`Response: HTTP ${res.status} ${res.statusText}`);
 
-  // If 401, retry with legacy token auth header
   if (res.status === 401) {
+    logDebug(`401 Unauthorized — Retrying with legacy 'token' auth header...`, 'error');
     headers['Authorization'] = `token ${token}`;
     res = await fetch(url, { ...options, headers });
+    logDebug(`Retry Response: HTTP ${res.status} ${res.statusText}`);
+  }
+
+  if (!res.ok) {
+    const text = await res.clone().text().catch(() => '');
+    logDebug(`API Error Body (${res.status}): ${text}`, 'error');
+  } else {
+    logDebug(`API Success ✓`, 'success');
   }
 
   return res;

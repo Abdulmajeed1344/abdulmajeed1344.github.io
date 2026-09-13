@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="upload.css?v=8" />
+  <link rel="stylesheet" href="upload.css?v=9" />
 </head>
 <body>
 
@@ -96,6 +96,13 @@
 
           <ul class="dash-media-grid" id="dash-media-grid" role="list" aria-label="Uploaded media"></ul>
           <p class="dash-media-empty" id="dash-media-empty" hidden>No media in this album yet. Click "Upload Media" to add some.</p>
+        <!-- Debug log panel -->
+        <div id="debug-panel" style="margin-top:28px;padding:16px;background:rgba(15,15,22,0.9);border:1px solid rgba(201,168,76,0.3);border-radius:10px;font-family:monospace;font-size:0.78rem;color:#aaa;display:none;">
+          <div style="font-weight:bold;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+            <span>🐞 System API Debug Log</span>
+            <button onclick="document.getElementById('debug-log').innerHTML='';" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.7rem;">Clear Log</button>
+          </div>
+          <div id="debug-log" style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;"></div>
         </div>
 
       </main>
@@ -163,6 +170,6 @@
     </div>
   </div>
 
-  <script type="module" src="upload.js?v=8"></script>
+  <script type="module" src="upload.js?v=9"></script>
 </body>
 </html>
