@@ -1,8 +1,5 @@
-// explore.js — Firestore-powered gallery with albums + masonry + lightbox
-import { db } from './firebase-config.js';
-import {
-  collection, getDocs, orderBy, query
-} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+// explore.js — data.json-powered gallery with albums + masonry + lightbox
+// No Firebase. Reads data from data.json in the repo via fetch.
 
 // ─── CURSOR + NAV (shared with main site) ────────────────────────────────────
 (function initCursorAndNav() {
@@ -87,65 +84,71 @@ const revealObs = new IntersectionObserver(entries => {
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
 // ─── STATE ─────────────────────────────────────────────────────────────────────
-let currentAlbum   = null;   // { id, name }
-let currentMedia   = [];     // array of media objects in active album
-let lightboxIndex  = 0;
+let currentAlbum  = null;
+let currentMedia  = [];
+let lightboxIndex = 0;
 
 // ─── DOM REFS ──────────────────────────────────────────────────────────────────
-const albumsView   = document.getElementById('albums-view');
-const mediaView    = document.getElementById('media-view');
-const albumsGrid   = document.getElementById('albums-grid');
-const albumsEmpty  = document.getElementById('albums-empty');
-const albumCount   = document.getElementById('album-count');
-const masonryGrid  = document.getElementById('masonry-grid');
-const mediaEmpty   = document.getElementById('media-empty');
-const mediaTitle   = document.getElementById('media-album-title');
-const mediaCount   = document.getElementById('media-count');
-const backBtn      = document.getElementById('back-btn');
+const albumsView  = document.getElementById('albums-view');
+const mediaView   = document.getElementById('media-view');
+const albumsGrid  = document.getElementById('albums-grid');
+const albumsEmpty = document.getElementById('albums-empty');
+const albumCount  = document.getElementById('album-count');
+const masonryGrid = document.getElementById('masonry-grid');
+const mediaEmpty  = document.getElementById('media-empty');
+const mediaTitle  = document.getElementById('media-album-title');
+const mediaCount  = document.getElementById('media-count');
+const backBtn     = document.getElementById('back-btn');
 
-const lightbox     = document.getElementById('lightbox');
-const lbContent    = document.getElementById('lightbox-content');
-const lbCaption    = document.getElementById('lightbox-caption');
-const lbCounter    = document.getElementById('lightbox-counter');
-const lbClose      = document.getElementById('lightbox-close');
-const lbPrev       = document.getElementById('lightbox-prev');
-const lbNext       = document.getElementById('lightbox-next');
-const lbBackdrop   = document.getElementById('lightbox-backdrop');
+const lightbox    = document.getElementById('lightbox');
+const lbContent   = document.getElementById('lightbox-content');
+const lbCaption   = document.getElementById('lightbox-caption');
+const lbCounter   = document.getElementById('lightbox-counter');
+const lbClose     = document.getElementById('lightbox-close');
+const lbPrev      = document.getElementById('lightbox-prev');
+const lbNext      = document.getElementById('lightbox-next');
+const lbBackdrop  = document.getElementById('lightbox-backdrop');
+
+// ─── FETCH DATA ────────────────────────────────────────────────────────────────
+async function fetchData() {
+  // Add cache-bust so we always get the latest version
+  const res = await fetch(`data.json?cb=${Date.now()}`);
+  if (!res.ok) throw new Error('Could not load data.json');
+  return res.json();
+}
 
 // ─── LOAD ALBUMS ───────────────────────────────────────────────────────────────
 async function loadAlbums() {
   try {
-    const snap = await getDocs(query(collection(db, 'albums'), orderBy('createdAt', 'desc')));
-    // Remove skeletons
+    const data = await fetchData();
     albumsGrid.innerHTML = '';
 
-    if (snap.empty) {
+    if (!data.albums || data.albums.length === 0) {
       albumsEmpty.hidden = false;
       albumCount.textContent = '0 albums';
       return;
     }
 
-    albumCount.textContent = `${snap.size} album${snap.size !== 1 ? 's' : ''}`;
+    albumCount.textContent = `${data.albums.length} album${data.albums.length !== 1 ? 's' : ''}`;
 
-    snap.forEach(doc => {
-      const data  = doc.data();
-      const count = data.itemCount || 0;
+    data.albums.forEach(album => {
+      const count = album.itemCount || 0;
       const card  = document.createElement('li');
       card.className = 'album-card';
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', `Open album: ${data.name}`);
+      card.setAttribute('aria-label', `Open album: ${album.name}`);
 
       card.innerHTML = `
-        ${data.coverImage
-          ? `<img class="album-cover" src="${data.coverImage}" alt="${data.name} album cover" loading="lazy" />`
+        ${album.coverImage
+          ? `<img class="album-cover" src="${album.coverImage}" alt="${album.name} album cover" loading="lazy" />`
           : `<div class="album-cover-placeholder" aria-hidden="true">🖼️</div>`}
         <div class="album-overlay">
-          <p class="album-name">${escHtml(data.name)}</p>
+          <p class="album-name">${escHtml(album.name)}</p>
           <p class="album-meta">${count} item${count !== 1 ? 's' : ''}</p>
         </div>`;
 
-      const open = () => openAlbum(doc.id, data.name);
+      const open = () => openAlbum(album.id, album.name, album.media || []);
       card.addEventListener('click', open);
       card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       albumsGrid.appendChild(card);
@@ -154,43 +157,38 @@ async function loadAlbums() {
     console.error('Failed to load albums:', err);
     albumCount.textContent = 'Could not load albums.';
     albumsGrid.innerHTML = `<p style="color:var(--muted);font-family:var(--font-body);font-size:.85rem;">
-      Firebase not configured yet. See firebase-config.js.</p>`;
+      Failed to load data.json. Make sure the file exists in the repo.</p>`;
   }
 }
 
 // ─── OPEN ALBUM ────────────────────────────────────────────────────────────────
-async function openAlbum(albumId, albumName) {
+function openAlbum(albumId, albumName, media) {
   currentAlbum = { id: albumId, name: albumName };
   mediaTitle.textContent = albumName;
   masonryGrid.innerHTML = '';
   mediaEmpty.hidden = true;
-  mediaCount.textContent = 'Loading…';
 
   albumsView.hidden = true;
   mediaView.hidden  = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  try {
-    const snap = await getDocs(
-      query(collection(db, 'albums', albumId, 'media'), orderBy('uploadedAt', 'desc'))
-    );
+  // Sort newest first
+  const sorted = [...media].sort((a, b) => (b.uploadedAt || 0) - (a.uploadedAt || 0));
+  currentMedia = sorted;
 
-    currentMedia = [];
-    if (snap.empty) { mediaEmpty.hidden = false; mediaCount.textContent = '0 items'; return; }
-
-    mediaCount.textContent = `${snap.size} item${snap.size !== 1 ? 's' : ''}`;
-
-    snap.forEach((doc, idx) => {
-      const m = { id: doc.id, ...doc.data() };
-      currentMedia.push(m);
-      const li = buildMasonryItem(m, currentMedia.length - 1);
-      masonryGrid.appendChild(li);
-      revealObs.observe(li);
-    });
-  } catch (err) {
-    console.error('Failed to load media:', err);
-    mediaCount.textContent = 'Error loading media.';
+  if (sorted.length === 0) {
+    mediaEmpty.hidden = false;
+    mediaCount.textContent = '0 items';
+    return;
   }
+
+  mediaCount.textContent = `${sorted.length} item${sorted.length !== 1 ? 's' : ''}`;
+
+  sorted.forEach((m, idx) => {
+    const li = buildMasonryItem(m, idx);
+    masonryGrid.appendChild(li);
+    revealObs.observe(li);
+  });
 }
 
 // ─── BUILD MASONRY ITEM ────────────────────────────────────────────────────────
@@ -245,7 +243,6 @@ function openLightbox(index) {
 function closeLightbox() {
   lightbox.hidden = true;
   document.body.style.overflow = '';
-  // Stop any playing video
   const v = lbContent.querySelector('video');
   if (v) v.pause();
 }
@@ -254,7 +251,6 @@ function renderLightbox() {
   const m = currentMedia[lightboxIndex];
   if (!m) return;
 
-  // Stop any previous video
   const oldVideo = lbContent.querySelector('video');
   if (oldVideo) oldVideo.pause();
 
@@ -262,8 +258,8 @@ function renderLightbox() {
     ? `<video src="${m.url}" controls autoplay playsinline aria-label="${escHtml(m.caption || 'Video')}"></video>`
     : `<img src="${m.url}" alt="${escHtml(m.caption || `Photo ${lightboxIndex + 1}`)}" />`;
 
-  lbCaption.textContent  = m.caption || '';
-  lbCounter.textContent  = `${lightboxIndex + 1} / ${currentMedia.length}`;
+  lbCaption.textContent = m.caption || '';
+  lbCounter.textContent = `${lightboxIndex + 1} / ${currentMedia.length}`;
   lbPrev.disabled = lightboxIndex === 0;
   lbNext.disabled = lightboxIndex === currentMedia.length - 1;
 }
